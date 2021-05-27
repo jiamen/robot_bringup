@@ -137,10 +137,14 @@ bool robot::deal(double RobotV, double RobotYawRate)
 {
     // 向STM32发送对机器人的预期控制速度，以及预留信号控制位
     writeSpeed(RobotV, RobotYawRate, sensFlag_);
+
     // 从STM32读取机器人实际线速度，角速度以及角度，以及预留信号控制位
+    // 使用的是两轮差分轮式机器人的运动学模型，将两轮速度转换成总速度 vx_
     readSpeed(vx_, vth_, th_, receFlag_);
-    // 里程计计算
+
+    // 里程计计算     移动机器人的里程计就是机器人每时每刻在世界坐标系下的位姿状态
     calcOdom();
+
     // 发布TF变换和Odom
     pubOdomAndTf();
 }
