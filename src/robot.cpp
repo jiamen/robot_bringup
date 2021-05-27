@@ -96,6 +96,7 @@ void robot::pubOdomAndTf()
     odom_trans.header.stamp = current_time_;
     odom_trans.header.frame_id = "odom";
     odom_trans.child_frame_id  = "base_footprint";          // 机器人坐标系的在二维平面的投影点
+    // base_link是与机器人中心重合，而base_footprint是base_link在地面的投影（所以这两者的z坐标才会不一样）。
 
     geometry_msgs::Quaternion odom_quat;
     odom_quat = tf::createQuaternionMsgFromYaw(th_);
