@@ -26,6 +26,7 @@ int main(int argc, char* *argv)
         ROS_ERROR("my_robot initialized failed!");
     ROS_INFO("my_robot initialized successful.");
 
+    // 订阅速度控制，可能来自键盘、手机App等的遥控，解析得到速度和角速度
     ros::Subscriber sub = nh.subscribe("cmd_vel", 50, cmdCallback);
 
     // 循环运行

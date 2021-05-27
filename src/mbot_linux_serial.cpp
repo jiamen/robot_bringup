@@ -33,7 +33,7 @@ union receiveData
 }leftVelNow, rightVelNow, angleNow;
 
 const double ROBOT_LENGTH = 157.00;     // mm
-const double ROBOT_RADIUS = 78.50;      // 两轮之间的半径长度mm
+const double ROBOT_RADIUS = 78.50;      // 两轮之间的一半长度mm
 
 /********************************************************
 函数功能：串口参数初始化
@@ -50,7 +50,7 @@ void serialInit()
 }
 
 /********************************************************
-函数功能：将机器人的线速度和角速度分解成左右轮子速度，打包发送给下位机
+函数功能：将机器人的线速度和角速度 分解成 左右轮子速度，打包发送给下位机
 入口参数：机器人线速度、角速度
 出口参数：
 ********************************************************/
@@ -166,7 +166,7 @@ bool readSpeed(double& vx, double& vth, double& th, unsigned char& ctrlFlag)
 
     // ===========================速度计算和Angle获取===========================================================
     // x方向速度，以及角速度
-    vx  = (rightVelNow.d + leftVelNow.d)  / 2.0 / 1000.0;       // m/s
+    vx  = (rightVelNow.d + leftVelNow.d)  / 2.0 / 1000.0;       // m/s          V = W*R = (Vr+Vl)/2
     vth = (rightVelNow.d - rightVelNow.d) / ROBOT_LENGTH;       // rad/s
     th  = angleNow.d * 0.01745;         // 实时角度信息，注意这里是 角度 转换成 弧度       360°=2π rad, 所以1°=2π/360=0.01745rad
 

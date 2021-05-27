@@ -83,7 +83,7 @@ void robot::calcOdom()
 }
 
 /********************************************************
-函数功能：发布机器人里程计和TF
+函数功能：发布机器人里程计和TF            移动机器人的 里程计 就是机器人每时每刻在 世界坐标系下 的位姿状态。
 入口参数：无
 出口参数：无
 ********************************************************/
@@ -95,7 +95,7 @@ void robot::pubOdomAndTf()
     geometry_msgs::TransformStamped odom_trans;
     odom_trans.header.stamp = current_time_;
     odom_trans.header.frame_id = "odom";
-    odom_trans.child_frame_id  = "base_footprint";
+    odom_trans.child_frame_id  = "base_footprint";          // 机器人坐标系的在二维平面的投影点
 
     geometry_msgs::Quaternion odom_quat;
     odom_quat = tf::createQuaternionMsgFromYaw(th_);
@@ -104,13 +104,13 @@ void robot::pubOdomAndTf()
     odom_trans.transform.translation.z = 0.0;
     odom_trans.transform.rotation = odom_quat;
 
-    odom_broadcaster_.sendTransform(odom_trans);
+    odom_broadcaster_.sendTransform(odom_trans);            // odom与当前机器人坐标系的变换
 
     // 发布里程计消息
     nav_msgs::Odometry msgl;
     msgl.header.stamp = current_time_;
     msgl.header.frame_id = "odom";
-    msgl.child_frame_id = "base_footprint";
+    msgl.child_frame_id  = "base_footprint";
 
     msgl.pose.pose.position.x = x_;
     msgl.pose.pose.position.y = y_;
@@ -118,17 +118,19 @@ void robot::pubOdomAndTf()
     msgl.pose.pose.orientation = odom_quat;
     msgl.pose.covariance = odom_pose_covariance;
 
-    msgl.twist.twist.linear.x = vx_;
-    msgl.twist.twist.linear.y = vy_;
+    msgl.twist.twist.linear.x  = vx_;
+    msgl.twist.twist.linear.y  = vy_;
     msgl.twist.twist.angular.z = vth_;
     msgl.twist.covariance = odom_twist_covariance;
 
     pub_.publish(msgl);         // 发布里程计消息
+    // 里程计的计算是指以机器人上电时刻为世界坐标系的起点（机器人的航向角是世界坐标系X正方向）开始，
+            // 累积计算任意时刻机器人在 世界坐标系下 的位姿。
 }
 
 /********************************************************
 函数功能：自定义deal，实现整合，并且发布TF变换和Odom
-入口参数：机器人线速度和角速度，调用上面两个函数
+入口参数：机器人线速度和角速度，调用上面两个函数，    也是robot_bringup.cpp文件main函数中调用的最重要函数，串联整个工程
 出口参数：bool
 ********************************************************/
 bool robot::deal(double RobotV, double RobotYawRate)
