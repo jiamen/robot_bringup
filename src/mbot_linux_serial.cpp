@@ -167,7 +167,7 @@ bool readSpeed(double& vx, double& vth, double& th, unsigned char& ctrlFlag)
     // ===========================速度计算和Angle获取===========================================================
     // x方向速度，以及角速度
     vx  = (rightVelNow.d + leftVelNow.d)  / 2.0 / 1000.0;       // m/s          V = W*R = (Vr+Vl)/2
-    vth = (rightVelNow.d - rightVelNow.d) / ROBOT_LENGTH;       // rad/s
+    vth = (rightVelNow.d - leftVelNow.d) / ROBOT_LENGTH;       // rad/s
     th  = angleNow.d * 0.01745;         // 实时角度信息，注意这里是 角度 转换成 弧度       360°=2π rad, 所以1°=2π/360=0.01745rad
 
     return true;
